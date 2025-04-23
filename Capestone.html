@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genetic Health Insight</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #f9fafb;
+      color: #1f2937;
+    }
+    header {
+      background: #4f46e5;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    nav a {
+      margin: 0 1rem;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover {
+      opacity: 0.8;
+    }
+    main section {
+      display: none;
+    }
+    main section.active {
+      display: block;
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #4f46e5;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #4338ca;
+    }
+    h2 {
+      color: #4f46e5;
+    }
+    h3 {
+      color: #1e40af;
+    }
+    ul {
+      padding-left: 1.5rem;
+    }
+    .hidden {
+      display: none;
+    }
+    .chatbox {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background: #f3f4f6;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .chat-input {
+      margin-top: 1rem;
+      display: flex;
+    }
+    .chat-input input {
+      flex: 1;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Genetic Health Insight</h1>
+    <nav>
+      <a onclick="switchSection('predictor')">Predictor</a>
+      <a onclick="switchSection('info')">Disease Info</a>
+      <a onclick="switchSection('prevention')">Prevention</a>
+      <a onclick="switchSection('doctors')">Doctors</a>
+      <a onclick="switchSection('appointments')">Appointments</a>
+      <a onclick="switchSection('helpdesk')">Help Desk</a>
+      <a onclick="switchSection('chatbot')">Chatbot</a>
+    </nav>
+  </header>
+  <main>
+    <section id="predictor" class="active">
+      <h2>Genetic Risk Predictor</h2>
+      <label for="name">Full Name</label>
+      <input type="text" id="name" />
+
+      <label for="disease">Select Disease</label>
+      <select id="disease">
+        <option value="">Choose</option>
+        <option value="Diabetes">Diabetes</option>
+        <option value="Huntington's">Huntington's</option>
+        <option value="Cystic Fibrosis">Cystic Fibrosis</option>
+        <option value="Cancer">Cancer</option>
+      </select>
+
+      <label for="markers">Genetic Markers (comma-separated)</label>
+      <input type="text" id="markers" placeholder="e.g., BRCA1, TP53" />
+
+      <label for="history">Family History (Yes/No)</label>
+      <input type="text" id="history" />
+
+      <button onclick="analyzeRisk()">Analyze</button>
+
+      <div id="result" style="margin-top: 1rem;"></div>
+      <div id="showPrevention" class="hidden">
+        <button onclick="switchSection('prevention')">View Preventive Measures</button>
+      </div>
+      <canvas id="riskChart" height="200"></canvas>
+    </section>
+
+    <section id="info">
+      <h2>Disease Information</h2>
+      <div id="diseaseInfo"></div>
+    </section>
+
+    <section id="prevention">
+      <h2>Preventive Measures</h2>
+      <label for="preventSelect">Choose Disease for Prevention Info</label>
+      <select id="preventSelect" onchange="showPreventionInfo()">
+        <option value="">Select</option>
+        <option value="Diabetes">Diabetes</option>
+        <option value="Huntington's">Huntington's</option>
+        <option value="Cystic Fibrosis">Cystic Fibrosis</option>
+        <option value="Cancer">Cancer</option>
+      </select>
+      <div id="preventionInfo" style="margin-top: 1rem;"></div>
+    </section>
+
+    <section id="doctors">
+      <h2>Consult the Best Doctors</h2>
+      <label for="location">Enter Your Location</label>
+      <input type="text" id="location" placeholder="e.g., New York" />
+      <button onclick="alert('Searching for doctors near you...')">Search Doctors</button>
+    </section>
+
+    <section id="appointments">
+      <h2>Book an Appointment</h2>
+      <label for="appointDisease">Select Disease</label>
+      <select id="appointDisease">
+        <option value="">Choose</option>
+        <option value="Diabetes">Diabetes</option>
+        <option value="Huntington's">Huntington's</option>
+        <option value="Cystic Fibrosis">Cystic Fibrosis</option>
+        <option value="Cancer">Cancer</option>
+      </select>
+      <label for="appointDate">Preferred Date</label>
+      <input type="date" id="appointDate" />
+      <button onclick="alert('Appointment booked successfully!')">Book Appointment</button>
+    </section>
+
+    <section id="helpdesk">
+      <h2>Help Desk & Contact Us</h2>
+      <p>If you need any assistance, feel free to reach out to our team.</p>
+      <ul>
+        <li>Email: support@genetichealth.com</li>
+        <li>Phone: +1 800 123 4567</li>
+        <li>Live Chat: Available 9 AM - 5 PM</li>
+      </ul>
+    </section>
+
+    <section id="chatbot">
+      <h2>Chatbot Assistance</h2>
+      <div class="chatbox" id="chatbox">
+        <div><strong>Bot:</strong> Hello! How can I help you today?</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Type your question here..." />
+        <button onclick="chatSend()">Send</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function switchSection(id) {
+      document.querySelectorAll('main section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+
+    const diseaseDetails = {
+      "Diabetes": "Diabetes is a chronic condition characterized by elevated levels of blood sugar...",
+      "Huntington's": "Huntington's disease is an inherited disorder that results in the progressive breakdown...",
+      "Cystic Fibrosis": "Cystic Fibrosis is a genetic disorder that causes severe damage to the lungs...",
+      "Cancer": "Cancer is a broad group of diseases involving abnormal cell growth..."
+    };
+
+    const preventionTips = {
+      "Diabetes": ["Adopt a balanced, low-sugar diet.", "Engage in regular physical activity.", "Regularly monitor blood sugar levels.", "Avoid excessive sugar and processed foods.", "Maintain a healthy weight."],
+      "Huntington's": ["Seek genetic counseling if there's a family history.", "Participate in regular neurological check-ups.", "Maintain physical and mental activity.", "Plan for long-term care and support."],
+      "Cystic Fibrosis": ["Perform regular chest physiotherapy to clear mucus.", "Follow a high-calorie, high-protein diet.", "Stay current with vaccinations.", "Use medications and therapies as prescribed."],
+      "Cancer": ["Avoid tobacco and limit alcohol intake.", "Eat a diet rich in fruits, vegetables, and whole grains.", "Engage in regular physical activity.", "Get regular screenings for early detection.", "Minimize exposure to harmful environmental agents."]
+    };
+
+    function analyzeRisk() {
+      const name = document.getElementById("name").value;
+      const disease = document.getElementById("disease").value;
+      const markers = document.getElementById("markers").value.split(',').filter(Boolean).length;
+      const history = document.getElementById("history").value.toLowerCase() === "yes" ? 1 : 0;
+
+      const baseScore = markers * 10 + history * 30;
+      const riskScore = Math.min(100, baseScore);
+      const isAtRisk = riskScore > 50;
+
+      document.getElementById("result").innerHTML = `
+        <strong>${name}</strong>, you are
+        <span style="color:${isAtRisk ? 'red' : 'green'};font-weight:bold;">
+          ${isAtRisk ? 'at risk' : 'not at significant risk'}</span>
+        of <strong>${disease}</strong> (Risk Score: ${riskScore}%).
+      `;
+
+      document.getElementById("showPrevention").classList.toggle("hidden", !isAtRisk);
+
+      new Chart(document.getElementById('riskChart'), {
+        type: 'bar',
+        data: {
+          labels: ['Genetic Markers', 'Family History', 'Other'],
+          datasets: [{
+            label: 'Contribution to Risk %',
+            data: [markers * 10, history * 30, 100 - baseScore],
+            backgroundColor: ['#6366f1', '#818cf8', '#c7d2fe']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    function loadInfo() {
+      const info = document.getElementById('diseaseInfo');
+      for (let key in diseaseDetails) {
+        const div = document.createElement('div');
+        div.innerHTML = `<h3>${key}</h3><p>${diseaseDetails[key]}</p>`;
+        info.appendChild(div);
+      }
+    }
+
+    function showPreventionInfo() {
+      const selected = document.getElementById("preventSelect").value;
+      const container = document.getElementById("preventionInfo");
+      container.innerHTML = "";
+      if (selected && preventionTips[selected]) {
+        container.innerHTML = `<h3>${selected}</h3><ul>${preventionTips[selected].map(t => `<li>${t}</li>`).join('')}</ul>`;
+      }
+    }
+
+    function chatSend() {
+      const input = document.getElementById("chatInput");
+      const message = input.value.trim();
+      if (!message) return;
+      const chatbox = document.getElementById("chatbox");
+      chatbox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+      input.value = "";
+      setTimeout(() => {
+        chatbox.innerHTML += `<div><strong>Bot:</strong> Thank you for your query. We'll get back to you shortly.</div>`;
+        chatbox.scrollTop = chatbox.scrollHeight;
+      }, 500);
+    }
+
+    window.onload = loadInfo;
+  </script>
+</body>
+</html>
