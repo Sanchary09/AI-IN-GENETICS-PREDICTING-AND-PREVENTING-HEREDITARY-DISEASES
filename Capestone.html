@@ -10,296 +10,543 @@
     * {
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
     }
     body {
-      margin: 0;
-      background: #f9fafb;
+      background: url('https://imgs.search.brave.com/dZV17kzmbk5q0Eg091PloyfeqGoVGxkd3A8i1Ew7zzw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA0LzI0LzMwLzkz/LzM2MF9GXzQyNDMw/OTMyMF9Va094ZzJ6/M3NxN3lYd0duV0NP/NnhCWGtSSTRieWhu/SS5qcGc') no-repeat center center fixed;
+      background-size: cover;
       color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
-      background: #4f46e5;
+      background: linear-gradient(90deg, #6366f1, #4f46e5);
       color: white;
-      padding: 1rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
     nav a {
-      margin: 0 1rem;
+      margin-left: 1.5rem;
       color: white;
       text-decoration: none;
       font-weight: 600;
-      transition: opacity 0.3s;
-      cursor: pointer;
+      transition: opacity 0.3s ease;
+      font-size: 1rem;
     }
     nav a:hover {
       opacity: 0.8;
     }
-    main section {
-      display: none;
+    main {
+      flex: 1;
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    main section.active {
-      display: block;
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 2rem;
+    section {
+      display: none;
       background: white;
+      padding: 2rem;
       border-radius: 1rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      animation: fadeIn 0.5s ease;
+      min-height: 80vh; /* makes section look filled */
+    }
+    section.active {
+      display: block;
+    }
+    h1, h2 {
+      margin-bottom: 1.5rem;
     }
     label {
       display: block;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       font-weight: 600;
     }
-    input, select {
+    input, select, textarea {
       width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.25rem;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
       border-radius: 0.5rem;
-      border: 1px solid #ccc;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      font-size: 1rem;
     }
     button {
       background: #4f46e5;
       color: white;
-      padding: 0.75rem 1.5rem;
       border: none;
+      padding: 0.75rem 2rem;
       border-radius: 0.5rem;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 1rem;
-      transition: background 0.3s;
+      margin-top: 1.5rem;
+      margin-right: 1rem;
+      transition: background 0.3s ease;
+      font-size: 1rem;
     }
     button:hover {
       background: #4338ca;
     }
-    h2 {
-      color: #4f46e5;
-    }
-    h3 {
-      color: #1e40af;
-    }
     ul {
       padding-left: 1.5rem;
+      margin-top: 1rem;
     }
     .hidden {
       display: none;
     }
-    .chatbox {
-      border: 1px solid #ccc;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      background: #f3f4f6;
-      max-height: 300px;
-      overflow-y: auto;
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 1rem;
     }
-    .chat-input {
-      margin-top: 1rem;
-      display: flex;
+    .faq-question {
+      cursor: pointer;
+      font-weight: 600;
+      color: #1e3a8a;
     }
-    .chat-input input {
-      flex: 1;
-      margin-right: 0.5rem;
+    .faq-answer {
+      display: none;
+      margin-top: 0.5rem;
+      color: #374151;
+    }
+    canvas {
+      margin-top: 2rem;
+    }
+    #result {
+      font-weight: 600;
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>Genetic Health Insight</h1>
-    <nav>
-      <a onclick="switchSection('predictor')">Predictor</a>
-      <a onclick="switchSection('info')">Disease Info</a>
-      <a onclick="switchSection('prevention')">Prevention</a>
-      <a onclick="switchSection('doctors')">Doctors</a>
-      <a onclick="switchSection('appointments')">Appointments</a>
-      <a onclick="switchSection('helpdesk')">Help Desk</a>
-      <a onclick="switchSection('chatbot')">Chatbot</a>
-    </nav>
-  </header>
-  <main>
-    <section id="predictor" class="active">
-      <h2>Genetic Risk Predictor</h2>
-      <label for="name">Full Name</label>
-      <input type="text" id="name" />
 
-      <label for="disease">Select Disease</label>
-      <select id="disease">
-        <option value="">Choose</option>
-        <option value="Diabetes">Diabetes</option>
-        <option value="Huntington's">Huntington's</option>
-        <option value="Cystic Fibrosis">Cystic Fibrosis</option>
-        <option value="Cancer">Cancer</option>
-      </select>
+<header>
+  <h1>Genetic Health Insight</h1>
+  <nav>
+    <a onclick="switchSection('predictor')">Predictor</a>
+    <a onclick="switchSection('info')">Disease Info</a>
+    <a onclick="switchSection('prevention')">Prevention</a>
+    <a onclick="switchSection('doctors')">Doctors</a>
+    <a onclick="switchSection('appointments')">Appointments</a>
+    <a onclick="switchSection('helpdesk')">Help Desk</a>
+    <a onclick="switchSection('faq')">FAQ</a>
+  </nav>
+</header>
 
-      <label for="markers">Genetic Markers (comma-separated)</label>
-      <input type="text" id="markers" placeholder="e.g., BRCA1, TP53" />
+<main>
 
-      <label for="history">Family History (Yes/No)</label>
-      <input type="text" id="history" />
+  <!-- Predictor -->
+  <section id="predictor" class="active">
+    <h2>Genetic Risk Predictor</h2>
 
-      <button onclick="analyzeRisk()">Analyze</button>
+    <label for="name">Full Name</label>
+    <input type="text" id="name" placeholder="Enter your full name" />
 
-      <div id="result" style="margin-top: 1rem;"></div>
-      <div id="showPrevention" class="hidden">
-        <button onclick="switchSection('prevention')">View Preventive Measures</button>
-      </div>
-      <canvas id="riskChart" height="200"></canvas>
-    </section>
+    <label for="disease">Select Disease</label>
+    <select id="disease">
+      <option value="">Choose</option>
+      <option value="Diabetes">Diabetes</option>
+      <option value="Huntington's">Huntington's</option>
+      <option value="Cystic Fibrosis">Cystic Fibrosis</option>
+      <option value="Cancer">Cancer</option>
+      <option value="Sickle Cell Anemia">Sickle Cell Anemia</option>
+    </select>
 
-    <section id="info">
-      <h2>Disease Information</h2>
-      <div id="diseaseInfo"></div>
-    </section>
+    <label for="markers">Genetic Markers (comma-separated)</label>
+    <input type="text" id="markers" placeholder="e.g., BRCA1, TP53" />
 
-    <section id="prevention">
-      <h2>Preventive Measures</h2>
-      <label for="preventSelect">Choose Disease for Prevention Info</label>
-      <select id="preventSelect" onchange="showPreventionInfo()">
-        <option value="">Select</option>
-        <option value="Diabetes">Diabetes</option>
-        <option value="Huntington's">Huntington's</option>
-        <option value="Cystic Fibrosis">Cystic Fibrosis</option>
-        <option value="Cancer">Cancer</option>
-      </select>
-      <div id="preventionInfo" style="margin-top: 1rem;"></div>
-    </section>
+    <label for="history">Family History (Yes/No)</label>
+    <input type="text" id="history" placeholder="Yes or No" />
 
-    <section id="doctors">
-      <h2>Consult the Best Doctors</h2>
-      <label for="location">Enter Your Location</label>
-      <input type="text" id="location" placeholder="e.g., New York" />
-      <button onclick="alert('Searching for doctors near you...')">Search Doctors</button>
-    </section>
+    <button onclick="analyzeRisk()">Analyze</button>
 
-    <section id="appointments">
-      <h2>Book an Appointment</h2>
-      <label for="appointDisease">Select Disease</label>
-      <select id="appointDisease">
-        <option value="">Choose</option>
-        <option value="Diabetes">Diabetes</option>
-        <option value="Huntington's">Huntington's</option>
-        <option value="Cystic Fibrosis">Cystic Fibrosis</option>
-        <option value="Cancer">Cancer</option>
-      </select>
-      <label for="appointDate">Preferred Date</label>
-      <input type="date" id="appointDate" />
-      <button onclick="alert('Appointment booked successfully!')">Book Appointment</button>
-    </section>
+    <div id="result"></div>
+    <div id="showPrevention" class="hidden">
+      <button onclick="switchSection('prevention')">View Preventive Measures</button>
+    </div>
+    <canvas id="riskChart" height="200"></canvas>
+  </section>
 
-    <section id="helpdesk">
-      <h2>Help Desk & Contact Us</h2>
-      <p>If you need any assistance, feel free to reach out to our team.</p>
+  <!-- Disease Info -->
+  <section id="info">
+    <h2>Disease Information</h2>
+    <p>Learn more about genetic diseases and their characteristics:</p>
+    <ul>
+      <li><b><p>Diabetes </b>:A chronic disease where the body either doesn't produce enough insulin (Type 1) or becomes resistant to insulin (Type 2), leading to elevated blood glucose levels.</p>
+<p>
+Types:
+
+Type 1 Diabetes: Autoimmune destruction of insulin-producing beta cells in the pancreas.
+
+Type 2 Diabetes: Body's cells become resistant to insulin, usually linked to obesity and lifestyle.
+
+Gestational Diabetes: Develops during pregnancy and usually resolves after childbirth.
+
+<p>Symptoms:
+
+<ol>1.Frequent urination</ol>
+
+<ol>2.Increased thirst and hunger</ol>
+
+<ol>3.Unexplained weight loss</ol>
+
+<ol>4.Fatigue</ol>
+
+<ol>5.Blurred vision</ol></p>
+
+Complications: Heart disease, Kidney failure ,Nerve damage (neuropathy) ,Eye damage (retinopathy)
+
+Management: Blood sugar monitoring ,Insulin therapy or oral medications ,Diet and exercise adjustments</p>
+
+</li><br>
+      <li><b><p>Huntington's Disease:</b> A genetic, progressive brain disorder caused by a defective gene (HTT gene) leading to the degeneration of nerve cells in the brain.
+
+Cause: Mutation involving an abnormal repetition of the CAG nucleotide sequence in the HTT gene.
+
+Symptoms:
+
+<ol>1. Involuntary jerking or writhing movements (chorea)</ol>
+
+<ol>2. Muscle problems (rigidity, dystonia)</ol>
+
+<ol>3. Cognitive decline (difficulty in thinking and memory)</ol>
+
+<ol>4. Psychiatric disorders (depression, irritability)</ol>
+
+Onset: Usually between ages 30–50, but can appear earlier (juvenile Huntington's).
+
+Complications: Inability to work,
+
+Difficulty swallowing and speaking,
+
+Need for full-time care in later stages
+
+Management:
+
+No cure; treatment focuses on symptom management with medications and supportive therapies.
+
+Genetic counseling for families.</li></p><br>
+      <li><b><p>Cystic Fibrosis:</b> A genetic disorder that causes severe damage to the lungs, digestive system, and other organs due to thick and sticky mucus buildup.
+
+Cause: Mutations in the CFTR gene, affecting the protein that regulates salt and water movement in and out of cells.
+
+Symptoms:
+
+<ol>1. Persistent coughing with thick mucus</ol>
+
+<ol>2. Frequent lung infections (e.g., pneumonia)</ol>
+
+<ol>3. Wheezing or shortness of breath</ol>
+
+<ol>4. Poor growth or weight gain despite a good appetite</ol>
+
+<ol>5. Greasy, bulky stools or difficulty with bowel movements</ol>
+
+Complications:
+
+Chronic respiratory failure,
+
+Pancreatic damage leading to diabetes,
+
+Infertility in males
+
+Management:
+
+Airway clearance techniques,
+
+Inhaled medicines (mucus thinners, bronchodilators),
+
+Pancreatic enzyme supplements,
+
+Antibiotics for infections,
+
+CFTR modulator therapies (for some mutations),
+
+Lung transplantation in severe cases</p>
+
+</li><br>
+      <li><b><p>Cancer:</b> A group of diseases characterized by uncontrolled division and spread of abnormal cells.
+
+Causes:
+
+Genetic mutations (inherited or acquired)
+
+Environmental factors (smoking, radiation, infections)
+
+Lifestyle factors (diet, physical activity)
+
+Types:
+
+Carcinomas: Cancer of epithelial tissues (e.g., breast, lung).
+
+Sarcomas: Cancer of connective tissues (e.g., bones, muscles).
+
+Leukemias: Cancer of blood-forming tissues.
+
+Lymphomas: Cancer of the immune system cells.
+
+Symptoms (vary depending on type):
+
+<ol>1. Lump or mass</ol>
+
+<ol>2. Unexplained weight loss</ol>
+
+<ol>3. Fatigue</ol>
+
+<ol>4. Persistent pain</ol>
+
+<ol>5. Changes in skin</ol>
+
+Complications:
+
+Metastasis (spread to other parts of the body)
+
+Organ failure
+
+Treatment side effects (e.g., immunosuppression)
+
+Management:
+
+Surgery,
+
+Chemotherapy,
+
+Radiation therapy,
+
+Immunotherapy,
+
+Targeted therapy
+
+Palliative care </p></li><br>
+      <li><b><p>Sickle Cell Anemia:</b> A hereditary blood disorder where red blood cells are abnormally shaped (sickle-shaped), leading to blockages in blood flow and reduced oxygen delivery to tissues.
+
+Cause: Mutation in the HBB gene affecting hemoglobin structure.
+
+Symptoms:
+
+<ol> 1. Episodes of pain (sickle cell crises)</ol>
+
+<ol> 2. Anemia (fatigue, paleness)</ol>
+
+<ol> 3. Swelling in hands and feet</ol>
+
+<ol> 4. Frequent infections</ol>
+
+<ol> 5. Delayed growth or puberty</ol>
+
+<ol> 6. Vision problems</ol>
+
+Complications:
+
+Stroke,
+
+Acute chest syndrome (lung blockage),
+
+Organ damage (kidneys, liver),
+
+Priapism (prolonged, painful erections).
+
+Management:
+
+Pain management during crises,
+
+Blood transfusions,
+
+Hydroxyurea (medicine to reduce sickling),
+
+Bone marrow or stem cell transplants (potential cure),
+
+Preventive antibiotics and vaccinations</p></li><br>
+    </ul>
+  </section>
+
+  <!-- Prevention -->
+  <section id="prevention">
+    <h2>Preventive Measures</h2>
+    <label for="preventSelect">Choose Disease for Prevention Info</label>
+    <select id="preventSelect" onchange="showPreventionInfo()">
+      <option value="">Select</option>
+      <option value="Diabetes">Diabetes</option>
+      <option value="Huntington's">Huntington's</option>
+      <option value="Cystic Fibrosis">Cystic Fibrosis</option>
+      <option value="Cancer">Cancer</option>
+      <option value="Sickle Cell Anemia">Sickle Cell Anemia</option>
+    </select>
+    <div id="preventionInfo" style="margin-top: 1rem;"></div>
+  </section>
+
+  <!-- Doctors -->
+  <section id="doctors">
+    <h2>Top Genetic Specialists Near You</h2>
+    <p>Find leading doctors for early diagnosis and management of genetic conditions.</p>
+
+    <label for="location">Enter Your Location</label>
+    <input type="text" id="location" placeholder="e.g., New York" />
+    <button onclick="alert('Searching for doctors near you...')">Search Doctors</button>
+
+    <div style="margin-top: 2rem;">
+      <h3>Featured Doctors</h3>
       <ul>
-        <li>Email: support@genetichealth.com</li>
-        <li>Phone: +1 800 123 4567</li>
-        <li>Live Chat: Available 9 AM - 5 PM</li>
+        <li><strong>Dr. Jane Smith</strong> - Genetic Counselor (New York Genetic Center)</li>
+        <li><strong>Dr. Raj Patel</strong> - Clinical Geneticist (Boston Medical Genetics)</li>
+        <li><strong>Dr. Lisa Wong</strong> - Pediatric Genetic Specialist (San Francisco Children's Hospital)</li>
       </ul>
-    </section>
+    </div>
+  </section>
 
-    <section id="chatbot">
-      <h2>Chatbot Assistance</h2>
-      <div class="chatbox" id="chatbox">
-        <div><strong>Bot:</strong> Hello! How can I help you today?</div>
-      </div>
-      <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Type your question here..." />
-        <button onclick="chatSend()">Send</button>
-      </div>
-    </section>
-  </main>
+  <!-- Appointments -->
+  <section id="appointments">
+    <h2>Book an Appointment</h2>
+    <label for="appointDisease">Select Disease</label>
+    <select id="appointDisease">
+      <option value="">Choose</option>
+      <option value="Diabetes">Diabetes</option>
+      <option value="Huntington's">Huntington's</option>
+      <option value="Cystic Fibrosis">Cystic Fibrosis</option>
+      <option value="Cancer">Cancer</option>
+      <option value="Sickle Cell Anemia">Sickle Cell Anemia</option>
+    </select>
 
-  <script>
-    function switchSection(id) {
-      document.querySelectorAll('main section').forEach(section => {
-        section.classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
+    <label for="appointDate">Preferred Date</label>
+    <input type="date" id="appointDate" />
+    <button onclick="alert('Appointment booked successfully!')">Book Appointment</button>
+  </section>
+
+  <!-- Help Desk -->
+  <section id="helpdesk">
+    <h2>Help Desk & Contact Us</h2>
+    <ul>
+      <li>Email: support@genetichealth.com</li>
+      <li>Phone: +1 800 123 4567</li>
+      <li>Live Chat: 9 AM - 5 PM</li><br>
+    </ul>
+
+    <h3>Contact Us</h3>
+    <label for="contactName">Your Name</label>
+    <input type="text" id="contactName" placeholder="Enter your name" />
+
+    <label for="contactEmail">Your Email</label>
+    <input type="email" id="contactEmail" placeholder="Enter your email" />
+
+    <label for="contactMessage">Your Message</label>
+    <textarea id="contactMessage" rows="4" placeholder="Write your message"></textarea>
+
+    <button onclick="sendContact()">Send Message</button>
+    <div id="contactResult" style="margin-top: 1rem;"></div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <h2>Frequently Asked Questions (FAQ)</h2>
+    <div id="faqList"></div>
+  </section>
+
+</main>
+
+<script>
+  let chartInstance;
+
+  function switchSection(id) {
+    document.querySelectorAll('main section').forEach(section => {
+      section.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+  }
+
+  function analyzeRisk() {
+    const disease = document.getElementById('disease').value;
+    const familyHistory = document.getElementById('history').value.toLowerCase();
+    const markers = document.getElementById('markers').value.split(',').filter(x => x.trim() !== '').length;
+    let risk = 0;
+
+    if (familyHistory === 'yes') risk += 30;
+    risk += markers * 10;
+    if (risk > 100) risk = 100;
+
+    document.getElementById('result').innerText = `Estimated Genetic Risk for ${disease}: ${risk}%`;
+    document.getElementById('showPrevention').classList.remove('hidden');
+
+    const ctx = document.getElementById('riskChart').getContext('2d');
+    if (chartInstance) {
+      chartInstance.destroy();
     }
-
-    const diseaseDetails = {
-      "Diabetes": "Diabetes is a chronic condition characterized by elevated levels of blood sugar...",
-      "Huntington's": "Huntington's disease is an inherited disorder that results in the progressive breakdown...",
-      "Cystic Fibrosis": "Cystic Fibrosis is a genetic disorder that causes severe damage to the lungs...",
-      "Cancer": "Cancer is a broad group of diseases involving abnormal cell growth..."
-    };
-
-    const preventionTips = {
-      "Diabetes": ["Adopt a balanced, low-sugar diet.", "Engage in regular physical activity.", "Regularly monitor blood sugar levels.", "Avoid excessive sugar and processed foods.", "Maintain a healthy weight."],
-      "Huntington's": ["Seek genetic counseling if there's a family history.", "Participate in regular neurological check-ups.", "Maintain physical and mental activity.", "Plan for long-term care and support."],
-      "Cystic Fibrosis": ["Perform regular chest physiotherapy to clear mucus.", "Follow a high-calorie, high-protein diet.", "Stay current with vaccinations.", "Use medications and therapies as prescribed."],
-      "Cancer": ["Avoid tobacco and limit alcohol intake.", "Eat a diet rich in fruits, vegetables, and whole grains.", "Engage in regular physical activity.", "Get regular screenings for early detection.", "Minimize exposure to harmful environmental agents."]
-    };
-
-    function analyzeRisk() {
-      const name = document.getElementById("name").value;
-      const disease = document.getElementById("disease").value;
-      const markers = document.getElementById("markers").value.split(',').filter(Boolean).length;
-      const history = document.getElementById("history").value.toLowerCase() === "yes" ? 1 : 0;
-
-      const baseScore = markers * 10 + history * 30;
-      const riskScore = Math.min(100, baseScore);
-      const isAtRisk = riskScore > 50;
-
-      document.getElementById("result").innerHTML = `
-        <strong>${name}</strong>, you are
-        <span style="color:${isAtRisk ? 'red' : 'green'};font-weight:bold;">
-          ${isAtRisk ? 'at risk' : 'not at significant risk'}</span>
-        of <strong>${disease}</strong> (Risk Score: ${riskScore}%).
-      `;
-
-      document.getElementById("showPrevention").classList.toggle("hidden", !isAtRisk);
-
-      new Chart(document.getElementById('riskChart'), {
-        type: 'bar',
-        data: {
-          labels: ['Genetic Markers', 'Family History', 'Other'],
-          datasets: [{
-            label: 'Contribution to Risk %',
-            data: [markers * 10, history * 30, 100 - baseScore],
-            backgroundColor: ['#6366f1', '#818cf8', '#c7d2fe']
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Risk', 'Safe'],
+        datasets: [{
+          data: [risk, 100 - risk],
+          backgroundColor: ['#ef4444', '#10b981'],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
         }
-      });
-    }
-
-    function loadInfo() {
-      const info = document.getElementById('diseaseInfo');
-      for (let key in diseaseDetails) {
-        const div = document.createElement('div');
-        div.innerHTML = `<h3>${key}</h3><p>${diseaseDetails[key]}</p>`;
-        info.appendChild(div);
       }
-    }
+    });
+  }
 
-    function showPreventionInfo() {
-      const selected = document.getElementById("preventSelect").value;
-      const container = document.getElementById("preventionInfo");
-      container.innerHTML = "";
-      if (selected && preventionTips[selected]) {
-        container.innerHTML = `<h3>${selected}</h3><ul>${preventionTips[selected].map(t => `<li>${t}</li>`).join('')}</ul>`;
-      }
-    }
+  function showPreventionInfo() {
+    const disease = document.getElementById('preventSelect').value;
+    const preventionTexts = {
+      "Diabetes": "Maintain a Healthy Weight: Reducing excess weight helps prevent insulin resistance,Eat a Balanced Diet: Focus on whole grains, fruits, vegetables, lean proteins, and healthy fats,Stay Physically Active: Aim for at least 30 minutes of moderate exercise most days,Limit Sugary Foods and Beverages: Reduce intake of processed and sugary foods that contribute to blood sugar spikes,Regular Monitoring: For individuals at risk, regular screening for blood sugar levels is crucial for early detection.",
+      "Huntington's": "Genetic Counseling: If there's a family history, genetic counseling can help individuals understand their risk of inheriting the disorder and whether genetic testing is appropriate,Supportive Care: Early intervention for symptoms (such as physical therapy, medications for psychiatric symptoms, and cognitive therapies) can improve quality of life,Family Planning: Couples with a history of Huntington’s may consider genetic counseling for reproductive planning, including prenatal genetic testing or assisted reproductive technologies (e.g., IVF with genetic screening).",
+      "Cystic Fibrosis": "Newborn Screening: CF can be detected through newborn screening, which can lead to early interventions that help manage symptoms,Prenatal Testing: Couples who are carriers of the CF gene can consider prenatal testing (e.g., amniocentesis or chorionic villus sampling) to detect CF in the fetus,Early Intervention: If CF is diagnosed, early treatment (e.g., airway clearance therapy, enzyme replacements, and medications) can help manage the disease and improve quality of life,Vaccinations: People with CF should be vaccinated against infections, including flu and pneumonia, as they are at higher risk of respiratory infections.",
+      "Cancer": "Quit Smoking: Smoking is a major cause of lung and many other cancers. Avoiding tobacco or quitting smoking reduces cancer risk,Healthy Diet: A diet rich in fruits, vegetables, whole grains, and lean proteins can help reduce cancer risk. Limiting red and processed meats is also important,Regular Exercise: Physical activity helps maintain a healthy weight and reduces the risk of several types of cancer, including breast and colorectal cancer,Sun Protection: Avoid excessive sun exposure and use sunscreen to reduce the risk of skin cancer, including melanoma,Limit Alcohol: Excessive alcohol consumption increases the risk of cancers such as liver, breast, and colorectal cancers,Get Screened: Regular screenings for certain cancers (e.g., mammograms for breast cancer, colonoscopies for colorectal cancer, Pap tests for cervical cancer) can detect early signs before symptoms appear,Vaccination: Vaccines like the HPV vaccine can prevent certain cancers, such as cervical cancer, and the hepatitis B vaccine can help prevent liver cancer.",
+      "Sickle Cell Anemia": "Genetic Counseling: For individuals with a family history of sickle cell disease, genetic counseling can help assess the risk of passing the condition to offspring,Prenatal Screening: Prenatal genetic screening can detect sickle cell disease in the fetus, providing parents with information to prepare for management,Prevent Infections: Children with sickle cell anemia are more prone to infections, so early vaccination and regular penicillin therapy are essential,Hydration and Pain Management: Staying well-hydrated and avoiding situations that cause dehydration or high altitudes can reduce the frequency of painful sickle cell crises,Regular Medical Checkups: Regular visits to a healthcare provider can help manage symptoms, prevent complications, and monitor for conditions like stroke, organ damage, or infections."
+    };
+    document.getElementById('preventionInfo').innerText = preventionTexts[disease] || '';
+  }
 
-    function chatSend() {
-      const input = document.getElementById("chatInput");
-      const message = input.value.trim();
-      if (!message) return;
-      const chatbox = document.getElementById("chatbox");
-      chatbox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
-      input.value = "";
-      setTimeout(() => {
-        chatbox.innerHTML += `<div><strong>Bot:</strong> Thank you for your query. We'll get back to you shortly.</div>`;
-        chatbox.scrollTop = chatbox.scrollHeight;
-      }, 500);
+  function sendContact() {
+    const name = document.getElementById('contactName').value;
+    const email = document.getElementById('contactEmail').value;
+    const message = document.getElementById('contactMessage').value;
+    if (name && email && message) {
+      document.getElementById('contactResult').innerText = 'Message sent successfully!';
+    } else {
+      document.getElementById('contactResult').innerText = 'Please fill out all fields.';
     }
+  }
 
-    window.onload = loadInfo;
-  </script>
+  const faqs = [
+    { q: "What is Genetic Health Insight?", a: "It's a platform for genetic risk prediction and health advice." },
+    { q: "How accurate are the predictions?", a: "They are estimates based on current genetic data and research." },
+    { q: "Is my genetic data secure?", a: "Yes, we use industry-standard encryption to protect your data." },
+    { q: "Can I use this for a medical diagnosis?", a: "No, consult your healthcare provider for an official diagnosis." },
+    { q: "What diseases can I predict?", a: "Diabetes, Cancer, Huntington’s, Cystic Fibrosis, Sickle Cell Anemia, and more." },
+    { q: "Do I need a doctor's referral?", a: "No, anyone can access the platform directly." },
+    { q: "What should I do if my risk is high?", a: "Consult a genetic counselor or doctor immediately." },
+    { q: "How often is the data updated?", a: "We update it based on latest research quarterly." }
+  ];
+
+  const faqList = document.getElementById('faqList');
+  faqs.forEach((faq, index) => {
+    const div = document.createElement('div');
+    div.className = 'faq-item';
+    div.innerHTML = `
+      <div class="faq-question" onclick="this.nextElementSibling.style.display = (this.nextElementSibling.style.display === 'block' ? 'none' : 'block')">
+        ${index + 1}. ${faq.q}
+      </div>
+      <div class="faq-answer">${faq.a}</div>
+    `;
+    faqList.appendChild(div);
+  });
+</script>
+
 </body>
 </html>
